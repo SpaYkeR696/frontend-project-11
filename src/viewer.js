@@ -14,7 +14,7 @@ const elements = {
 };
 
 const launchViewer = (initialState) => {
-  const i18nInstanse = i18n.createInstanse();
+  const i18nInstanse = i18n.createInstance();
   
   i18nInstanse.init({
     lng: ru,
