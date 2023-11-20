@@ -27,6 +27,7 @@
     "workbox-webpack-plugin": "^7.0.0"
   },
   "name": "@hexlet/code",
+  "type": "module",
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/SpaYkeR696/frontend-project-11/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/SpaYkeR696/frontend-project-11/actions)",
   "main": "index.js",

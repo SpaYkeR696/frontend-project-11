@@ -1,5 +1,5 @@
 import axios from 'axios';
-import updateParsing from './updateParsing';
+import updateParsing from './updateParsing.js';
 
 const addProxyToUrl = (href) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(href)}`;
 

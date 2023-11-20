@@ -1,37 +1,10 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-const isProduction = process.env.NODE_ENV == "production";
-
-const config = {
-  entry: "./src/index.js",
-  output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, "dist"),
-  },
-  devServer: {
-    open: true,
-    host: "localhost",
-    hot: true,
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "index.html",
-    }),
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-    }) 
-  ],
+export default {
+  mode: process.env.NODE_ENV || 'development',
   module: {
     rules: [
-      {
-        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: "asset",
-      },
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -42,10 +15,10 @@ const config = {
           },
         },
       },
-      { test: /\.css$/, use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'] },
+      { test: /\.css$/, use: ['style-loader', 'css-loader', 'postcss-loader'] },
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader', 'sass-loader'],
+        use: ['style-loader', 'css-loader', 'sass-loader', 'postcss-loader'],
       },
       {
         test: /\.woff2?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -57,15 +30,12 @@ const config = {
       },
     ],
   },
-};
-
-module.exports = () => {
-  if (isProduction) {
-    config.mode = "production";
-
-    config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
-  } else {
-    config.mode = "development";
-  }
-  return config;
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: 'index.html',
+    }),
+  ],
+  output: {
+    clean: true,
+  },
 };

@@ -1,7 +1,5 @@
 import onChange from 'on-change';
-
 import i18n from 'i18next';
-import ru from './locales/ru.js';
 import 'bootstrap';
 
 const elements = {
@@ -16,18 +14,10 @@ const elements = {
 const launchViewer = (initialState) => {
   const i18nInstanse = i18n.createInstance();
   
-  i18nInstanse.init({
-    lng: ru,
-    debug: true,
-    resources: {
-      ru,  
-    },
-  });
-  
   document.querySelector('h1').textContent = i18nInstanse.t('header1');
   document.querySelector('.lead').textContent = i18nInstanse.t('header2');
   document.querySelector('button[type="submit"]').textContent = i18nInstanse.t('btnSubmit');
-  document.querySelector('.textMuted').textContent = i18nInstanse.t('urlExample');
+  document.querySelector('.text-muted').textContent = i18nInstanse.t('urlExample');
   document.querySelector('label[for="url-input"]').textContent = i18nInstanse.t('inputLabel');
 
   const wathedState = onChange(initialState, (path, value) => {
