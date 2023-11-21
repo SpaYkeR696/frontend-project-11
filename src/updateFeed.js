@@ -6,15 +6,17 @@ const addProxyToUrl = (href) => `https://allorigins.hexlet.app/get?disableCache=
 const updateFeedsData = (href, viewer) => {
   console.log('before get request');
   const promise = axios.get(addProxyToUrl(href))
+
     .then((response) => {
       console.log('response', response);
       const { contents } = response.data;
-      updateParsing(contents, viewer);  
+
+      updateParsing(contents, viewer); // we say about current url with a unique doc
     })
     .catch(() => {
-        viewer.postValidationErrors.push('Network Error');
+      viewer.postValidationErrors.push('Network Error');
     });
-    return promise;
+  return promise;
 };
 
 export default updateFeedsData;

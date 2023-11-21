@@ -5,13 +5,15 @@ import validate from './validation.js';
 import { launchViewer, elements } from './viewer.js';
 import ru from './locales/ru.js';
 import parse from './parser.js';
-import updateFeedsData from './updateFeed.js';
+import updateFeedData from './updateFeed.js';
+
 import 'bootstrap';
 
 const addProxyToUrl = (href) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(href)}`;
 
 const app = () => {
   const initialState = {
+
     process: 'default',
     activePost: '',
     validationProcess: {
@@ -24,28 +26,30 @@ const app = () => {
     uiState: {
       submitBlocked: false,
     },
-  };
-  
-  const i18nInstanse = i18n.createInstance();
 
-  i18nInstanse.init({
+  };
+
+  const i18nInstance = i18n.createInstance();
+
+  i18nInstance.init({
     lng: 'ru',
-    debag: true,
-    resourse: {
-        ru,
+    debug: true,
+    resources: {
+      ru,
     },
   })
     .then(() => {
-      const wathedState = launchViewer(initialState);
-      
-      const addToState = (dom, url) => {
+      const watchedState = launchViewer(initialState);
+
+      const addDataToState = (dom, url) => {
         const itemEls = dom.querySelectorAll('item');
         if (itemEls.length === 0) {
-          wathedState.postValidationErrors.push('emptyRss');  
-        };
+          watchedState.postValidationErrors.push('emptyRss');
+        }
 
         const items = Array.from(dom.querySelectorAll('item'));
         const data = {
+
           feed: {
             title: dom.querySelector('title').textContent,
             id: _.uniqueId('f'),
@@ -64,33 +68,36 @@ const app = () => {
           description: postEl.querySelector('description').textContent,
           link: postEl.querySelector('link').textContent,
         });
+        const postsColl = items.map((item) => addPostData(item, currFeedId));
+        data.currPosts = postsColl;
 
-        const postColl = items.map((item) => addPostData(item, currFeedId));
-        data.currPosts = postColl;
-
-        return data;  
+        return data;
       };
-      
+
       const loadRss = (url) => {
         axios.get(addProxyToUrl(url))
           .then((response) => {
-            wathedState.uiState.submitBlocked = false;
+            watchedState.uiState.submitBlocked = false;
 
             const { contents } = response.data;
-            const parsedDom = parse(contents);
-            const extractedData = addToState(parsedDom, url);
-            const { feed, currPosts} = extractedData;
-            
-            wathedState.feeds.push(feed);
-            wathedState.posts = currPosts;
 
-            wathedState.process = 'rssLoaded';
-            wathedState.process = '';
+            const parsedDom = parse(contents);
+
+            const extractedData = addDataToState(parsedDom, url);
+
+            const { feed, currPosts } = extractedData;
+
+            watchedState.feeds.push(feed);
+            watchedState.posts = currPosts;
+
+            watchedState.process = 'rssLoaded';
+            watchedState.process = '';
           })
+
           .catch((err) => {
-            wathedState.uiState.submitBlocked = false;
+            watchedState.uiState.submitBlocked = false;
             console.log(err.message, 'err message catch', 'err', err);
-            wathedState.postValidationErrors.push(err.message);
+            watchedState.postValidationErrors.push(err.message);
             throw new Error(err);
           });
       };
@@ -99,40 +106,42 @@ const app = () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const url = formData.get('url');
-        const validatedUrls = wathedState.feeds.map((item) => item.feedUrl);
+        const validatedUrls = watchedState.feeds.map((item) => item.feedUrl);
 
         validate(validatedUrls, url)
+
           .then((validatedUrl) => {
-            wathedState.uiState.sabmitBlocked = true;
+            watchedState.uiState.submitBlocked = true;
             loadRss(validatedUrl);
           })
           .catch((err) => {
-            wathedState.validationProcess.error = err.errors;
-            wathedState.process = 'validationFail';
-            wathedState.process = '';
+            watchedState.validationProcess.error = err.errors;
+            watchedState.process = 'validationFail';
+            watchedState.process = '';
             throw new Error('validation');
           });
       }, true);
 
       elements.postsContainer.addEventListener('click', (e) => {
         const { target } = e;
-        const shownPostId = target.dataSet.id;
+
+        const shownPostId = target.dataset.id;
         if (!shownPostId) {
           return;
-        };
-        wathedState.shown.push(shownPostId);
-        wathedState.activePost = shownPostId;
+        }
+        watchedState.shown.push(shownPostId);
+        watchedState.activePost = shownPostId;
       });
 
       const launchUpdate = (state) => {
         const promises = state.feeds.map((item) => {
           const { feedUrl } = item;
-          const promise = updateFeedsData(feedUrl, state);
+          const promise = updateFeedData(feedUrl, state);
           return promise;
         });
-        Promise.all(promises).then(() => setTimeout(launchUpdate, 5000, wathedState));
+        Promise.all(promises).then(() => setTimeout(launchUpdate, 5000, watchedState));
       };
-      launchUpdate(wathedState); 
+      launchUpdate(watchedState);
     });
 };
 

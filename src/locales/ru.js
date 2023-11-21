@@ -1,13 +1,13 @@
 export default {
-  traslation: {
+  translation: {
     header1: 'RSS агрегатор',
-    header2: 'Начните читать RSS сегодня! Это легко, и красиво.',
+    header2: 'Начните читать RSS сегодня! Это легко, это красиво.',
     urlExample: 'Пример: https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
     btnSubmit: 'Добавить',
     inputLabel: 'Ссылка RSS',
-    succesMessage: 'RSS успешно загружен',
+    successMessage: 'RSS успешно загружен',
     existingRssError: 'RSS уже существует',
-    invalidRssForm: 'Ссылка должна быть валидным URL',
+    invalidRssError: 'Ссылка должна быть валидным URL',
     emptyRss: 'Не должно быть пустым',
     noRssError: 'Ресурс не содержит валидный RSS',
     'Network Error': 'Ошибка сети',
