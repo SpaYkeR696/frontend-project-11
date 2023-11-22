@@ -26,8 +26,6 @@ const launchViewer = (initialState) => {
   document.querySelector('h1').textContent = i18nInstance.t('header1');
   document.querySelector('.lead').textContent = i18nInstance.t('header2');
   document.querySelector('button[type="submit"]').textContent = i18nInstance.t('btnSubmit');
-  document.querySelector('.text-muted').textContent = i18nInstance.t('urlExample');
-
   document.querySelector('label[for="url-input"]').textContent = i18nInstance.t('inputLabel');
 
   const watchedState = onChange(initialState, (path, value) => {
@@ -139,7 +137,7 @@ const launchViewer = (initialState) => {
       }
     } else if (path.startsWith('postValidationErrors')) {
       const currentError = value[value.length - 1];
-      console.log('current value', value); // 3 types: net, empty, no-rss
+      console.log('current value', value); 
       const textError = i18nInstance.t(currentError);
       elements.feedBackMessageParagraph.classList.remove('text-success');
       elements.feedBackMessageParagraph.classList.add('text-danger');

@@ -11,7 +11,7 @@ const updateFeedsData = (href, viewer) => {
       console.log('response', response);
       const { contents } = response.data;
 
-      updateParsing(contents, viewer); // we say about current url with a unique doc
+      updateParsing(contents, viewer);
     })
     .catch(() => {
       viewer.postValidationErrors.push('Network Error');
