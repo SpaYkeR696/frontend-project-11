@@ -13,6 +13,6 @@ export default {
     'Network Error': 'Ошибка сети',
     read: 'Читать полностью',
     close: 'Закрыть',
-    see: 'Просмотр',  
+    see: 'Просмотр',
   },
 };

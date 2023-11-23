@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export default (contents, viewer) => { 
+export default (contents, viewer) => {
   const domParser = new DOMParser();
   const dom = domParser.parseFromString(contents, 'application/xml');
 
