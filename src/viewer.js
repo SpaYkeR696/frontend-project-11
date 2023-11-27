@@ -137,7 +137,6 @@ const launchViewer = (initialState) => {
       }
     } else if (path.startsWith('postValidationErrors')) {
       const currentError = value[value.length - 1];
-      console.log('current value', value);
       const textError = i18nInstance.t(currentError);
       elements.feedBackMessageParagraph.classList.remove('text-success');
       elements.feedBackMessageParagraph.classList.add('text-danger');
@@ -146,7 +145,6 @@ const launchViewer = (initialState) => {
       const { shown } = watchedState;
       shown.forEach((id) => {
         const elToSetStyle = document.querySelector(`a[data-id="${id}"]`);
-        console.log(elToSetStyle, 'element to change style');
         elToSetStyle.classList.remove('fw-bold');
         elToSetStyle.classList.add('fw-normal');
       });

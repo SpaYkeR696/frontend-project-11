@@ -45,8 +45,6 @@ export default (contents, viewer) => {
   const currentShownFeed = feeds[feeds.length - 1];
   const idOfShown = currentShownFeed.id;
 
-  console.log('is Empty newposts?', (_.isEmpty(newPosts)));
-
   if (!_.isEmpty(newPosts) && newPosts[0].fId === idOfShown) {
     viewer.process = 'rssUpdated';
     viewer.process = '';

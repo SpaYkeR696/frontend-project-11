@@ -96,7 +96,6 @@ const app = () => {
 
           .catch((err) => {
             watchedState.uiState.submitBlocked = false;
-            console.log(err.message, 'err message catch', 'err', err);
             watchedState.postValidationErrors.push(err.message);
             throw new Error(err);
           });
