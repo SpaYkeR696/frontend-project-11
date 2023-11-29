@@ -1,27 +1,7 @@
 import onChange from 'on-change';
-import i18n from 'i18next';
-import ru from './locales/ru.js';
 import 'bootstrap';
 
-const elements = {
-  form: document.querySelector('.rss-form'),
-  feedBackMessageParagraph: document.querySelector('.feedback'),
-  urlInput: document.getElementById('url-input'),
-  postsContainer: document.querySelector('.posts'),
-  feedsContainer: document.querySelector('.feeds'),
-  submitBtn: document.querySelector('button[type="submit"]'),
-};
-
-const launchViewer = (initialState) => {
-  const i18nInstance = i18n.createInstance();
-
-  i18nInstance.init({
-    lng: 'ru',
-    debug: true,
-    resources: {
-      ru,
-    },
-  });
+const launchViewer = (initialState, elements, i18nInstance) => {
 
   document.querySelector('h1').textContent = i18nInstance.t('header1');
   document.querySelector('.lead').textContent = i18nInstance.t('header2');
@@ -169,4 +149,4 @@ const launchViewer = (initialState) => {
   return watchedState;
 };
 
-export { elements, launchViewer };
+export { launchViewer };

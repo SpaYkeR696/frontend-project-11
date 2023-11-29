@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import axios from 'axios';
 import _ from 'lodash';
 import validate from './validation.js';
-import { launchViewer, elements } from './viewer.js';
+import { launchViewer } from './viewer.js';
 import ru from './locales/ru.js';
 import parse from './parser.js';
 import updateFeedData from './updateFeed.js';
@@ -39,39 +39,42 @@ const app = () => {
     },
   })
     .then(() => {
-      const watchedState = launchViewer(initialState);
+      const elements = {
+        form: document.querySelector('.rss-form'),
+        feedBackMessageParagraph: document.querySelector('.feedback'),
+        urlInput: document.getElementById('url-input'),
+        postsContainer: document.querySelector('.posts'),
+        feedsContainer: document.querySelector('.feeds'),
+        submitBtn: document.querySelector('button[type="submit"]'),
+      };
 
-      const addDataToState = (dom, url) => {
-        const itemEls = dom.querySelectorAll('item');
-        if (itemEls.length === 0) {
-          watchedState.postValidationErrors.push('emptyRss');
-        }
+      const watchedState = launchViewer(initialState, elements, i18nInstance);
 
-        const items = Array.from(dom.querySelectorAll('item'));
-        const data = {
+      const addPostData = (postEl, feedId) => ({
+        fId: feedId,
+        id: _.uniqueId(''),
+        title: postEl.querySelector('title').textContent,
+        description: postEl.querySelector('description').textContent,
+        link: postEl.querySelector('link').textContent,
+      });
 
+      const addDataToState = (data, state) => {
+        const items = Array.from(data.querySelectorAll('item'));
+        const dataState = {
           feed: {
-            title: dom.querySelector('title').textContent,
+            title: data.querySelector('title').textContent,
             id: _.uniqueId('f'),
-            description: dom.querySelector('description').textContent,
-            link: dom.querySelector('link').textContent,
-            feedUrl: url,
+            description: data.querySelector('description').textContent,
+            link: data.querySelector('link').textContent,
+            feedUrl: state,
           },
         };
 
-        const currFeedId = data.feed.id;
-
-        const addPostData = (postEl, feedId) => ({
-          fId: feedId,
-          id: _.uniqueId(''),
-          title: postEl.querySelector('title').textContent,
-          description: postEl.querySelector('description').textContent,
-          link: postEl.querySelector('link').textContent,
-        });
+        const currFeedId = dataState.feed.id;
         const postsColl = items.map((item) => addPostData(item, currFeedId));
-        data.currPosts = postsColl;
+        dataState.currPosts = postsColl;
 
-        return data;
+        return dataState;
       };
 
       const loadRss = (url) => {
