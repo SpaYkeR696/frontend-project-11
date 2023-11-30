@@ -58,7 +58,11 @@ const app = () => {
         link: postEl.querySelector('link').textContent,
       });
 
-      const domToUrl = (dom, url) => {
+      const addDomToUrl = (dom, url) => {
+        const itemEls = dom.querySelectorAll('item');
+        if (itemEls.length === 0) {
+          watchedState.postValidationErrors.push('emptyRss');
+        }
         const items = Array.from(dom.querySelectorAll('item'));
         const domState = {
           feed: {
@@ -86,7 +90,7 @@ const app = () => {
 
             const parsedDom = parse(contents);
 
-            const extractedData = domToUrl(parsedDom, url);
+            const extractedData = addDomToUrl(parsedDom, url);
 
             const { feed, currPosts } = extractedData;
 
