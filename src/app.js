@@ -58,23 +58,23 @@ const app = () => {
         link: postEl.querySelector('link').textContent,
       });
 
-      const addDataToState = (data, state) => {
-        const items = Array.from(data.querySelectorAll('item'));
-        const dataState = {
+      const domToUrl = (dom, url) => {
+        const items = Array.from(dom.querySelectorAll('item'));
+        const domState = {
           feed: {
-            title: data.querySelector('title').textContent,
+            title: dom.querySelector('title').textContent,
             id: _.uniqueId('f'),
-            description: data.querySelector('description').textContent,
-            link: data.querySelector('link').textContent,
-            feedUrl: state,
+            description: dom.querySelector('description').textContent,
+            link: dom.querySelector('link').textContent,
+            feedUrl: url,
           },
         };
 
-        const currFeedId = dataState.feed.id;
+        const currFeedId = domState.feed.id;
         const postsColl = items.map((item) => addPostData(item, currFeedId));
-        dataState.currPosts = postsColl;
+        domState.currPosts = postsColl;
 
-        return dataState;
+        return domState;
       };
 
       const loadRss = (url) => {
@@ -86,7 +86,7 @@ const app = () => {
 
             const parsedDom = parse(contents);
 
-            const extractedData = addDataToState(parsedDom, url);
+            const extractedData = domToUrl(parsedDom, url);
 
             const { feed, currPosts } = extractedData;
 
