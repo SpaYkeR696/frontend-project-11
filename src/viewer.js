@@ -2,7 +2,6 @@ import onChange from 'on-change';
 import 'bootstrap';
 
 const launchViewer = (initialState, elements, i18nInstance) => {
-
   document.querySelector('h1').textContent = i18nInstance.t('header1');
   document.querySelector('.lead').textContent = i18nInstance.t('header2');
   document.querySelector('button[type="submit"]').textContent = i18nInstance.t('btnSubmit');
@@ -149,4 +148,4 @@ const launchViewer = (initialState, elements, i18nInstance) => {
   return watchedState;
 };
 
-export { launchViewer };
+export default launchViewer;
