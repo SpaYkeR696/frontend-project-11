@@ -50,19 +50,7 @@ const app = () => {
 
       const watchedState = launchViewer(initialState, elements, i18nInstance);
 
-      const addPostData = (postEl, feedId) => ({
-        fId: feedId,
-        id: _.uniqueId(''),
-        title: postEl.querySelector('title').textContent,
-        description: postEl.querySelector('description').textContent,
-        link: postEl.querySelector('link').textContent,
-      });
-
       const addDomToUrl = (dom, url) => {
-        const itemEls = dom.querySelectorAll('item');
-        if (itemEls.length === 0) {
-          watchedState.postValidationErrors.push('emptyRss');
-        }
         const items = Array.from(dom.querySelectorAll('item'));
         const domState = {
           feed: {
@@ -74,6 +62,14 @@ const app = () => {
           },
         };
 
+        const addPostData = (postEl, feedId) => ({
+          fId: feedId,
+          id: _.uniqueId(''),
+          title: postEl.querySelector('title').textContent,
+          description: postEl.querySelector('description').textContent,
+          link: postEl.querySelector('link').textContent,
+        });
+        
         const currFeedId = domState.feed.id;
         const postsColl = items.map((item) => addPostData(item, currFeedId));
         domState.currPosts = postsColl;
