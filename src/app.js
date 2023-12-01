@@ -62,16 +62,16 @@ const app = () => {
           },
         };
 
-        const addPostData = (postEl, feedId) => ({
+        const addPostDom = (postEl, feedId) => ({
           fId: feedId,
           id: _.uniqueId(''),
           title: postEl.querySelector('title').textContent,
           description: postEl.querySelector('description').textContent,
           link: postEl.querySelector('link').textContent,
         });
-        
+
         const currFeedId = domState.feed.id;
-        const postsColl = items.map((item) => addPostData(item, currFeedId));
+        const postsColl = items.map((item) => addPostDom(item, currFeedId));
         domState.currPosts = postsColl;
 
         return domState;
