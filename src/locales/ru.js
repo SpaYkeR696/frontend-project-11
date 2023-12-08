@@ -1,18 +1,23 @@
-export default {
+const ru = {
   translation: {
-    header1: 'RSS агрегатор',
-    header2: 'Начните читать RSS сегодня! Это легко, это красиво.',
-    urlExample: 'Пример: https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
-    btnSubmit: 'Добавить',
-    inputLabel: 'Ссылка RSS',
-    successMessage: 'RSS успешно загружен',
-    existingRssError: 'RSS уже существует',
-    invalidRssError: 'Ссылка должна быть валидным URL',
-    emptyRss: 'Не должно быть пустым',
-    noRssError: 'Ресурс не содержит валидный RSS',
-    'Network Error': 'Ошибка сети',
-    read: 'Читать полностью',
-    close: 'Закрыть',
-    see: 'Просмотр',
+    errors: {
+      validation: {
+        validUrl: 'Ссылка должна быть валидным URL',
+        duplicateUrl: 'RSS уже существует',
+      },
+      network: {
+        invalidStatus: 'Сервер ответил кодом состояния, который не входит в диапазон 2xx',
+        invalidResponse: 'Ошибка сети',
+      },
+      parsing: {
+        invalidRss: 'Ресурс не содержит валидный RSS',
+      },
+    },
+    success: 'RSS успешно загружен',
+    posts: 'Посты',
+    view: 'Просмотр',
+    feeds: 'Фиды',
   },
 };
+
+export default ru;

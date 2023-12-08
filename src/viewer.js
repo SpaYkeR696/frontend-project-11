@@ -1,151 +1,165 @@
-import onChange from 'on-change';
-import 'bootstrap';
+const createWrapper = (heading, items, i18next) => {
+  const divElement = document.createElement('div');
+  divElement.classList.add('card', 'border-0');
 
-const launchViewer = (initialState, elements, i18nInstance) => {
-  document.querySelector('h1').textContent = i18nInstance.t('header1');
-  document.querySelector('.lead').textContent = i18nInstance.t('header2');
-  document.querySelector('button[type="submit"]').textContent = i18nInstance.t('btnSubmit');
-  document.querySelector('label[for="url-input"]').textContent = i18nInstance.t('inputLabel');
+  const cardBodyElement = document.createElement('div');
+  cardBodyElement.classList.add('card-body');
 
-  const watchedState = onChange(initialState, (path, value) => {
-    if (path === 'process') {
-      if (value === 'validationFail') {
-        elements.urlInput.classList.add('is-invalid');
-        elements.feedBackMessageParagraph.textContent = '';
-        elements.feedBackMessageParagraph.classList.remove('text-success');
-        elements.feedBackMessageParagraph.classList.add('text-danger');
+  const h2Element = document.createElement('h2');
+  h2Element.classList.add('card-title', 'h4');
+  h2Element.innerText = i18next.t(heading);
 
-        const { error } = watchedState.validationProcess;
-        elements.feedBackMessageParagraph.textContent = i18nInstance.t(error);
-      } else if (value === 'rssLoaded' || value === 'rssUpdated') {
-        elements.feedBackMessageParagraph.textContent = '';
+  cardBodyElement.appendChild(h2Element);
+  divElement.appendChild(cardBodyElement);
 
-        elements.urlInput.classList.remove('is-invalid');
-        elements.feedBackMessageParagraph.classList.remove('text-danger');
-        elements.feedBackMessageParagraph.classList.add('text-success');
-        elements.feedBackMessageParagraph.textContent = i18nInstance.t('successMessage');
-        elements.urlInput.value = '';
-
-        elements.form.focus();
-
-        elements.postsContainer.innerHTML = '';
-        elements.feedsContainer.innerHTML = '';
-
-        const feedsInnerContainer = document.createElement('div');
-        feedsInnerContainer.id = 'currentFeed';
-        const postsInnerContainer = document.createElement('div');
-        postsInnerContainer.id = 'currentPosts';
-
-        const headerFeed = document.createElement('h3');
-        const titleFeed = document.createElement('h3');
-        titleFeed.classList.add('h6', 'm-0');
-        const descriptionFeed = document.createElement('p');
-        descriptionFeed.classList.add('m-0', 'small', 'black-text-50');
-
-        const headerPosts = document.createElement('h3');
-        const ulFeeds = document.createElement('ul');
-        ulFeeds.classList.add('list-group', 'border-0');
-        ulFeeds.id = 'ulFeeds';
-
-        const ulPosts = document.createElement('ul');
-        ulPosts.classList.add('list-group', 'border-0');
-        ulPosts.id = 'ulPosts';
-        postsInnerContainer.append(ulPosts);
-
-        feedsInnerContainer.append(ulFeeds);
-
-        headerPosts.textContent = 'Posts';
-
-        headerFeed.textContent = 'Feeds';
-        const { feeds, posts } = watchedState;
-        const currFeed = feeds[feeds.length - 1];
-        const { title, id, description } = currFeed;
-
-        titleFeed.textContent = title;
-        descriptionFeed.textContent = description;
-        feedsInnerContainer.append(ulFeeds);
-
-        elements.feedsContainer.append(headerFeed, feedsInnerContainer);
-        elements.postsContainer.append(headerPosts, postsInnerContainer);
-
-        const currPosts = posts.filter((post) => post.fId === id);
-
-        const postEls = currPosts.map((post) => {
-          const li = document.createElement('li');
-          li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-
-          const a = document.createElement('a');
-
-          a.href = post.link;
-          a.textContent = post.title;
-          a.dataset.id = post.id;
-          const styleToApply = (watchedState.shown.includes(post.id)) ? 'fw-normal' : 'fw-bold';
-          a.classList.add(styleToApply);
-          a.setAttribute('data-id', post.id);
-
-          li.append(a);
-
-          const btn = document.createElement('button');
-          btn.classList.add('btn', 'btn-outline-primary');
-          btn.setAttribute('type', 'button');
-          btn.setAttribute('data-id', post.id);
-
-          btn.setAttribute('data-bs-toggle', 'modal');
-          btn.setAttribute('data-bs-target', '#modal');
-
-          btn.textContent = i18nInstance.t('see');
-          li.appendChild(btn);
-          return li;
-        });
-
-        ulPosts.append(...postEls);
-        postsInnerContainer.replaceChildren(ulPosts);
-
-        const feedEls = feeds.map((feed) => {
-          const li = document.createElement('li');
-          li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-          const h = document.createElement('h3');
-          h.textContent = feed.title;
-          const p = document.createElement('p');
-          p.textContent = feed.description;
-          li.append(h, p);
-          return li;
-        });
-        ulFeeds.prepend(...feedEls);
-        feedsInnerContainer.replaceChildren(ulFeeds);
-      }
-    } else if (path.startsWith('postValidationErrors')) {
-      const currentError = value[value.length - 1];
-      const textError = i18nInstance.t(currentError);
-      elements.feedBackMessageParagraph.classList.remove('text-success');
-      elements.feedBackMessageParagraph.classList.add('text-danger');
-      elements.feedBackMessageParagraph.textContent = textError;
-    } else if (path.startsWith('shown')) {
-      const { shown } = watchedState;
-      shown.forEach((id) => {
-        const elToSetStyle = document.querySelector(`a[data-id="${id}"]`);
-        elToSetStyle.classList.remove('fw-bold');
-        elToSetStyle.classList.add('fw-normal');
-      });
-    } else if (path === 'uiState.submitBlocked') {
-      if (value === true) {
-        elements.submitBtn.disabled = true;
-      } else {
-        elements.submitBtn.disabled = false;
-      }
-    } else if (path === 'activePost') {
-      const { posts } = watchedState;
-      const postData = posts.find((item) => item.id === value);
-      const modalTitle = document.querySelector('.modal-title');
-      modalTitle.textContent = postData.title;
-      const modalBody = document.querySelector('.modal-body');
-      modalBody.textContent = postData.description;
-      const modalHref = document.querySelector('.full-article');
-      modalHref.href = postData.link;
-    }
+  const ulElement = document.createElement('ul');
+  ulElement.classList.add('list-group', 'border-0', 'rounded-0');
+  items.forEach((item) => {
+    const liElement = document.createElement('li');
+    liElement.classList.add('list-group-item');
+    liElement.innerText = item;
+    ulElement.appendChild(liElement);
   });
 
-  return watchedState;
+  divElement.appendChild(ulElement);
+  return divElement.outerHTML;
 };
 
-export default launchViewer;
+const renderContent = (elements, state, i18next) => {
+  elements.postContainer.innerHTML = '';
+  elements.feedContainer.innerHTML = '';
+
+  const posts = state.content.posts.map(({ postTitle, postLink, postId }) => {
+    const linkElement = document.createElement('a');
+    const buttonElement = document.createElement('button');
+
+    const linkClass = state.ui.posts.has(postId) ? 'fw-normal' : 'fw-bold';
+
+    linkElement.href = postLink;
+    linkElement.target = '_blank';
+    linkElement.rel = 'noopener noreferrer';
+    linkElement.dataset.id = postId;
+    linkElement.dataset.link = true;
+    linkElement.classList.add(linkClass);
+    linkElement.innerText = postTitle;
+
+    buttonElement.type = 'button';
+    buttonElement.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    buttonElement.dataset.id = postId;
+    buttonElement.dataset.bsToggle = 'modal';
+    buttonElement.dataset.bsTarget = '#modal';
+    buttonElement.innerText = i18next.t('view');
+
+    const liElement = document.createElement('li');
+    liElement.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+    liElement.appendChild(linkElement);
+    liElement.appendChild(buttonElement);
+
+    return liElement.outerHTML;
+  });
+
+  const postWrapper = createWrapper('posts', posts, i18next);
+  elements.postContainer.insertAdjacentHTML('afterbegin', postWrapper);
+
+  const feeds = state.content.feeds.map(({ feedTitle, feedDescription }) => {
+    const h3Element = document.createElement('h3');
+    const pElement = document.createElement('p');
+
+    h3Element.classList.add('h6', 'm-0');
+    h3Element.innerText = feedTitle;
+
+    pElement.classList.add('m-0', 'small');
+    pElement.innerText = feedDescription;
+
+    const liElement = document.createElement('li');
+    liElement.classList.add('list-group-item', 'border-0', 'border-end-0');
+    liElement.appendChild(h3Element);
+    liElement.appendChild(pElement);
+
+    return liElement.outerHTML;
+  });
+
+  const feedWrapper = createWrapper('feeds', feeds, i18next);
+  elements.feedContainer.insertAdjacentHTML('afterbegin', feedWrapper);
+};
+
+const handleErrors = (elements, state, i18next) => {
+  if (elements.feedback.classList.contains('text-success')) {
+    elements.feedback.classList.add('text-danger');
+    elements.feedback.classList.remove('text-success');
+  }
+
+  if (Object.keys(state.form.errors).length !== 0) {
+    elements.feedback.textContent = i18next.t(state.form.errors.url);
+    elements.urlInput.classList.add('is-invalid');
+  } else {
+    elements.feedback.textContent = '';
+    elements.urlInput.classList.remove('is-invalid');
+  }
+};
+
+const handleSuccess = (elements, i18next) => {
+  if (elements.feedback.classList.contains('text-danger')) {
+    elements.feedback.classList.remove('text-danger');
+    elements.feedback.classList.add('text-success');
+    elements.feedback.textContent = i18next.t('success');
+  }
+};
+
+const changeUiAnchors = (elements, applyData) => {
+  const id = applyData.args[0];
+  const anchor = elements.postContainer.querySelector(`[data-link][data-id="${id}"]`);
+
+  anchor.classList.remove('fw-bold');
+  anchor.classList.add('fw-normal');
+};
+
+const handleStatus = (elements, value, i18next) => {
+  switch (value) {
+    case 'fetching':
+      elements.urlInput.disabled = true;
+      elements.submit.disabled = true;
+      break;
+    
+    case 'error':
+      elements.urlInput.disabled = false;
+      elements.submit.disabled = false;
+      break;
+    
+    case 'success':
+      handleSuccess(elements, i18next);
+      elements.urlInput.disabled = false;
+      elements.submit.disabled = false;
+      elements.form.reset();
+      elements.urlInput.focus();
+      break;
+      
+    default:
+      throw new Error(`unknown process ${value}`);
+  }
+};
+
+const watch = (path, value, applyData, elements, state, i18next) => {
+  switch (path) {
+    case 'form.errors':
+      handleErrors(elements, state, i18next);
+      break;
+    
+    case 'form.status':
+      handleStatus(elements, value, i18next);
+      break;
+     
+    case 'content.posts':
+      renderContent(elements, state, i18next);
+      break;
+      
+    case 'ui.posts':
+      changeUiAnchors(elements, applyData);
+      break;
+      
+    default:
+      break;  
+  }
+};
+
+export default watch;
