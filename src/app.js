@@ -3,7 +3,7 @@ import i18next from 'i18next';
 import watch from './viewer.js';
 import ru from './locales/ru.js';
 import { initialState, elements } from './modules.js';
-import initiateControl from './initiate.js'
+import initiateControl from './initiate.js';
 
 const app = () => {
   const i18nextInstance = i18next.createInstance();
