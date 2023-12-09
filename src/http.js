@@ -20,4 +20,3 @@ const request = (url) => axios.get(createProxyUrl(url))
   });
 
 export default request;
-  
