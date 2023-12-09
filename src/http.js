@@ -1,8 +1,8 @@
-import  axios  from "axios";
+import axios from 'axios';
 
-const creatProxyUrl = (url) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`;
+const createProxyUrl = (url) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
-const request = (url) => axios.get(creatProxyUrl(url))
+const request = (url) => axios.get(createProxyUrl(url))
   .then((response) => response.data.contents)
   .catch((error) => {
     const networkErrors = {};
@@ -10,7 +10,7 @@ const request = (url) => axios.get(creatProxyUrl(url))
     if (error.response) {
       networkErrors.url = 'errors.network.invalidStatus';
     } else {
-        networkErrors.url = 'errors.network.invalidResponse'
+      networkErrors.url = 'errors.network.invalidResponse';
     }
 
     const newError = new Error();

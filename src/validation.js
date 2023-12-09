@@ -1,41 +1,43 @@
-import * as yup from 'yup';
+import { object, string, setLocale } from 'yup';
 
-yup.setLocale({
+setLocale({
   string: {
-    url: () => ({ key: 'errors.validation.validUrl'}),
+    url: () => ({ key: 'errors.validation.validUrl' }),
   },
 });
 
-const shema = yup.object().shape({
-  url: yup.string().url().required(),
+const schema = object().shape({
+  url: string().url().required(),
 });
 
 const validateUniqueness = (state) => {
   const urls = state.urls.map(({ url }) => url);
 
-  if (urls.includes(state.form.fields.url)){
+  if (urls.includes(state.form.fields.url)) {
     const error = new Error();
     error.inner = [
       {
         path: 'url',
-        message: { key: 'errors.validation.duplicateUrl'},
+        message: { key: 'errors.validation.duplicateUrl' },
       },
     ];
+
     throw error;
   }
 };
 
-const validate = (state) => shema.validate(state.form.fields, { abortErly: false })
+const validate = (state) => schema.validate(state.form.fields, { abortEarly: false })
   .then(() => validateUniqueness(state))
   .catch((error) => {
-    const validationErrors = error.inner.reduce((acc, item) => {
+    const validationErrors = error.inner.reduce((accumulator, item) => {
       const { path, message } = item;
-      return ({ ...acc, [path]: message.key });
+      return ({ ...accumulator, [path]: message.key });
     }, {});
+
     const newError = new Error();
-    newError.errors = validationErrors
+    newError.errors = validationErrors;
 
     throw newError;
   });
 
-  export default validate;
+export default validate;

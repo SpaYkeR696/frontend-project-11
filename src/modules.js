@@ -19,13 +19,13 @@ const initialState = {
   ui: {
     posts: new Set(),
   },
-    urls: [],
-    form: {
-      status: null,
-      fields: {},
-      errors: {},
-    },
-    timeoutId: null,
+  urls: [],
+  form: {
+    status: null,
+    fields: {},
+    errors: {},
+  },
+  timeoutId: null,
 };
-  
+
 export { elements, initialState };

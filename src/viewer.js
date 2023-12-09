@@ -17,7 +17,7 @@ const createWrapper = (heading, items, i18next) => {
   items.forEach((item) => ulElement.insertAdjacentHTML("beforeend", item));
 
   divElement.appendChild(ulElement);
-  return divElement.outerHTML;
+  return divElement;
 };
 
 const renderContent = (elements, state, i18next) => {
@@ -61,7 +61,7 @@ const renderContent = (elements, state, i18next) => {
   });
 
   const postWrapper = createWrapper("posts", posts, i18next);
-  elements.postContainer.insertAdjacentHTML("afterbegin", postWrapper);
+  elements.postContainer.appendChild(postWrapper);
 
   const feeds = state.content.feeds.map(({ feedTitle, feedDescription }) => {
     const h3Element = document.createElement("h3");
@@ -82,55 +82,53 @@ const renderContent = (elements, state, i18next) => {
   });
 
   const feedWrapper = createWrapper("feeds", feeds, i18next);
-  elements.feedContainer.insertAdjacentHTML("afterbegin", feedWrapper);
+  elements.feedContainer.appendChild(feedWrapper);
 };
 
 const handleErrors = (elements, state, i18next) => {
-  if (elements.feedback.classList.contains("text-success")) {
-    elements.feedback.classList.add("text-danger");
-    elements.feedback.classList.remove("text-success");
+  if (elements.feedback.classList.contains('text-success')) {
+    elements.feedback.classList.add('text-danger');
+    elements.feedback.classList.remove('text-success');
   }
 
   if (Object.keys(state.form.errors).length !== 0) {
     elements.feedback.textContent = i18next.t(state.form.errors.url);
-    elements.urlInput.classList.add("is-invalid");
+    elements.urlInput.classList.add('is-invalid');
   } else {
-    elements.feedback.textContent = "";
-    elements.urlInput.classList.remove("is-invalid");
+    elements.feedback.textContent = '';
+    elements.urlInput.classList.remove('is-invalid');
   }
 };
 
 const handleSuccess = (elements, i18next) => {
-  if (elements.feedback.classList.contains("text-danger")) {
-    elements.feedback.classList.remove("text-danger");
-    elements.feedback.classList.add("text-success");
-    elements.feedback.textContent = i18next.t("success");
+  if (elements.feedback.classList.contains('text-danger')) {
+    elements.feedback.classList.remove('text-danger');
+    elements.feedback.classList.add('text-success');
+    elements.feedback.textContent = i18next.t('success');
   }
 };
 
 const changeUiAnchors = (elements, applyData) => {
   const id = applyData.args[0];
-  const anchor = elements.postContainer.querySelector(
-    `[data-link][data-id="${id}"]`
-  );
+  const anchor = elements.postContainer.querySelector(`[data-link][data-id="${id}"]`);
 
-  anchor.classList.remove("fw-bold");
-  anchor.classList.add("fw-normal");
+  anchor.classList.remove('fw-bold');
+  anchor.classList.add('fw-normal');
 };
 
 const handleStatus = (elements, value, i18next) => {
   switch (value) {
-    case "fetching":
+    case 'fetching':
       elements.urlInput.disabled = true;
       elements.submit.disabled = true;
       break;
 
-    case "error":
+    case 'error':
       elements.urlInput.disabled = false;
       elements.submit.disabled = false;
       break;
 
-    case "success":
+    case 'success':
       handleSuccess(elements, i18next);
       elements.urlInput.disabled = false;
       elements.submit.disabled = false;
@@ -139,25 +137,25 @@ const handleStatus = (elements, value, i18next) => {
       break;
 
     default:
-      throw new Error(`unknown process ${value}`);
+      throw new Error(`Unknown process ${value}`);
   }
 };
 
 const watch = (path, value, applyData, elements, state, i18next) => {
   switch (path) {
-    case "form.errors":
+    case 'form.errors':
       handleErrors(elements, state, i18next);
       break;
 
-    case "form.status":
+    case 'form.status':
       handleStatus(elements, value, i18next);
       break;
 
-    case "content.posts":
+    case 'content.posts':
       renderContent(elements, state, i18next);
       break;
 
-    case "ui.posts":
+    case 'ui.posts':
       changeUiAnchors(elements, applyData);
       break;
 

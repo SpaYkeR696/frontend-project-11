@@ -7,10 +7,11 @@ const createFeedData = (document, feedId) => {
     feedDescription: feedDescription.textContent,
     feedId,
   };
+
   return feed;
 };
 
-const createPostData = (document, feedId) => {
+const createPostsData = (document, feedId) => {
   const posts = [];
   const items = document.querySelectorAll('item');
 
@@ -42,7 +43,7 @@ const parse = (data, id) => {
 
   if (parserError) {
     const parsingErrors = {};
-    parserError.url = 'errors.parsing.invalidRss';
+    parsingErrors.url = 'errors.parsing.invalidRss';
 
     const newError = new Error();
     newError.errors = parsingErrors;
@@ -52,7 +53,7 @@ const parse = (data, id) => {
 
   const feedId = id || crypto.randomUUID();
   const feed = createFeedData(document, feedId);
-  const posts = createPostData(document, feedId);
+  const posts = createPostsData(document, feedId);
 
   return [feed, posts];
 };
