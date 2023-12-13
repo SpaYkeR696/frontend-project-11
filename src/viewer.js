@@ -1,3 +1,9 @@
+import onChange from 'on-change';
+import i18next from 'i18next';
+import ru from './locales/ru.js';
+import { initialState, elements } from './modules.js';
+import initControl from './initiate.js';
+
 const createWrapper = (heading, items, i18next) => {
   const divElement = document.createElement('div');
   divElement.classList.add('card', 'border-0');
@@ -164,4 +170,23 @@ const watch = (path, value, applyData, elements, state, i18next) => {
   }
 };
 
-export default watch;
+const watchState = () => {
+  const i18nextInstance = i18next.createInstance();
+  i18nextInstance
+    .init({
+      lng: 'ru',
+      debug: true,
+      resources: {
+        ru,
+      },
+    })
+    .then(() => {
+      const state = onChange(initialState, (path, value, _, applyData) => {
+        watch(path, value, applyData, elements, state, i18nextInstance);
+      });
+
+      initControl(elements, state);
+    });
+}
+
+export default watchState;
