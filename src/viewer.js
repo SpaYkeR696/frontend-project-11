@@ -1,4 +1,7 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-shadow */
 import onChange from 'on-change';
+// eslint-disable-next-line import/extensions
 import { initialState, elements } from './modules.js';
 
 const createWrapper = (heading, items, i18next) => {
@@ -172,7 +175,7 @@ const initState = (i18nextInstance) => {
     watch(path, value, applyData, elements, state, i18nextInstance);
   });
 
-  return state
-}
+  return state;
+};
 
 export default initState;

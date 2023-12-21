@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import i18next from 'i18next';
 import ru from './locales/ru.js';
 import { elements } from './modules.js';

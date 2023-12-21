@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable import/extensions */
 import parse from './parser.js';
 import setUpdate from './update.js';
 import request from './http.js';

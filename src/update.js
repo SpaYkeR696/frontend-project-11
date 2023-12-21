@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const TIMEOUT = 5000;
 
 const update = (url, id, request, parse, state) => request(url)
