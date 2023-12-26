@@ -19,7 +19,6 @@ const createPostsData = (document, feedId) => {
     const postTitle = item.querySelector('title');
     const postLink = item.querySelector('link');
     const postDescription = item.querySelector('description');
-    const postGuid = item.querySelector('guid');
     const parentFeedId = feedId;
     const postId = crypto.randomUUID();
 
@@ -27,7 +26,6 @@ const createPostsData = (document, feedId) => {
       postTitle: postTitle.textContent,
       postLink: postLink.textContent,
       postDescription: postDescription.textContent,
-      postGuid: postGuid.textContent,
       parentFeedId,
       postId,
     });

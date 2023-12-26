@@ -21,8 +21,6 @@ const updateAll = (request, parse, state) => Promise.resolve(state.urls)
   });
 
 const setUpdate = (request, parse, state) => {
-  clearTimeout(state.timeoutId);
-
   state.timeoutId = setTimeout(() => {
     updateAll(request, parse, state)
       .then(() => setUpdate(request, parse, state));
