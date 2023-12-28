@@ -67,10 +67,10 @@ const app = () => {
               state.form.status = 'success';
             })
             .catch((error) => {
-              state.form.errors = error.inner.reduce((accumulator, item) => {
+              state.form.errors = error.inner?.reduce((accumulator, item) => {
                 const { path, message } = item;
                 return ({ ...accumulator, [path]: message.key });
-              }, {});
+              }, {}) || error.errors;
               state.form.status = 'error';
             });
         });
