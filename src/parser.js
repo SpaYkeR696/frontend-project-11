@@ -34,7 +34,7 @@ const createPostsData = (document, feedId) => {
   return posts;
 };
 
-const parse = (data, id) => {
+const parse = (data) => {
   const parser = new DOMParser();
   const document = parser.parseFromString(data, 'text/xml');
   const parserError = document.querySelector('parsererror');
@@ -49,7 +49,7 @@ const parse = (data, id) => {
     throw newError;
   }
 
-  const feedId = id || crypto.randomUUID();
+  const feedId = crypto.randomUUID();
   const feed = createFeedData(document, feedId);
   const posts = createPostsData(document, feedId);
 

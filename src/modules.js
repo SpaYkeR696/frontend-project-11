@@ -21,7 +21,7 @@ const initialState = {
   },
   urls: [],
   form: {
-    status: 'success',
+    status: '',
     fields: {},
     errors: {},
   },

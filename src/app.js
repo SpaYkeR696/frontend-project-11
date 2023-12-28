@@ -52,25 +52,25 @@ const app = () => {
           [...formData.entries()].forEach(([key, value]) => {
             state.form.fields[key] = value.trim();
           });
-
-          validate(state)
-            .then(() => {
-              state.form.status = 'success';
-              state.form.status = 'fetching';
-              return request(state.form.fields.url);
-            })
-            .then(parse)
-            .then(([feed, posts]) => {
+          state.form.status = 'fetching';
+          validate(state.form.fields, state.urls)
+            .then(() => request(state.form.fields.url))
+            .then((data) => {
+              const [feed, posts] = parse(data);
               state.content.feeds.unshift(feed);
               state.content.posts.unshift(...posts);
               state.urls.push({
                 url: state.form.fields.url,
                 id: feed.feedId,
               });
+              setUpdate(request, parse, state);
+              state.form.status = 'success';
             })
-            .then(() => setUpdate(request, parse, state))
             .catch((error) => {
-              state.form.errors = error.errors;
+              state.form.errors = error.inner.reduce((accumulator, item) => {
+                const { path, message } = item;
+                return ({ ...accumulator, [path]: message.key });
+              }, {});
               state.form.status = 'error';
             });
         });
